@@ -33,7 +33,7 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
     var placesClient: GMSPlacesClient!
     
     @IBOutlet var seachBar: UISearchBar!
-    @IBOutlet var updateLocation:  UIButton!
+    @IBOutlet var updateLocation:  UIBarButtonItem!
     
 
     override func viewDidLoad() {
@@ -97,6 +97,24 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
+    /**
+    handles the preparation for segue
+     
+     - Parameter segue: The UIStorySegue
+     - Parameter sender: The source
+    */
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let identifier = segue.identifier {
+            if identifier == "DetailSegue" {
+                if let placeDetailVC = segue.destination as? PlaceDetailViewController {
+                    if let indexPath = tableView.indexPathForSelectedRow {
+                        let place = places[indexPath.row]
+                        //set placeDetailVC
+                    }
+                }
+            }
+        }
+    }
 
 }
 
