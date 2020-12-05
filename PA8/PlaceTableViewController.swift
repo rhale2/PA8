@@ -28,16 +28,19 @@ import UIKit
 import GoogleMaps
 import GooglePlaces
 
-class PlaceTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, GMSMapViewDelegate {
+class PlaceTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, GMSMapViewDelegate, UISearchBarDelegate {
     var places = [Place]()
     var placesClient: GMSPlacesClient!
     
-    @IBOutlet var seachBar: UISearchBar!
+    @IBOutlet var tableView: UITableView!
     @IBOutlet var updateLocation:  UIBarButtonItem!
+    
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        placesClient = GMSPlacesClient.shared()
+              
         // Do any additional setup after loading the view.
     }
     
@@ -115,6 +118,44 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
             }
         }
     }
-
+    
+    
+    
+    // id: Int, name: String, vicinity: String, rating: Int, photoRefrence: String
+    func getPlaces () {
+        let placeFields: GMSPlaceField = [.placeID, .name, .formattedAddress, .rating, .photos]
+        placesClient.findPlaceLikelihoodsFromCurrentLocation(withPlaceFields: placeFields) { (placeLikelihoods, error) in
+            
+            
+            guard error == nil else {
+                print("Current place error: \(error?.localizedDescription ?? "")")
+                return
+            }
+            
+            guard let place = placeLikelihoods?.first?.place, let id = place.placeID, let name = place.name, let address = place.formattedAddress, let photos = place.photos else {
+                print("error")
+                return
+            }
+            let rating = place.rating
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print(searchText)
+        if searchText != "" {
+            performSearch(searchBar: searchBar)
+        }
+        else {
+            searchBar.resignFirstResponder()
+        }
+    }
+    
+    func performSearch(searchBar: UISearchBar) {
+        if let text = searchBar.text {
+            let predicate = NSPredicate(format: "name CONTAINS[cd] %@", text)
+        }
+    }
+    
 }
+
 
