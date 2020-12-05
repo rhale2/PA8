@@ -27,6 +27,7 @@
 import UIKit
 import GoogleMaps
 import GooglePlaces
+import MBProgressHUD
 
 class PlaceTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, GMSMapViewDelegate, UISearchBarDelegate {
     var places = [Place]()
@@ -40,6 +41,7 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         placesClient = GMSPlacesClient.shared()
+        
               
         // Do any additional setup after loading the view.
     }
@@ -143,6 +145,7 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
         if searchText != "" {
+            MBProgressHUD.showAdded(to: self.view, animated: true)
             performSearch(searchBar: searchBar)
         }
         else {
@@ -153,6 +156,7 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
     func performSearch(searchBar: UISearchBar) {
         if let text = searchBar.text {
             let predicate = NSPredicate(format: "name CONTAINS[cd] %@", text)
+            MBProgressHUD.hide(for: self.view, animated: true)
         }
     }
     
