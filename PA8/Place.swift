@@ -21,20 +21,11 @@ import GooglePlaces
 import GoogleMaps
 import Foundation
 
-class Place {
+struct Place {
     var ID: Int
     var name: String
     var vicinity: String
     var rating: Int
     var photoRefrence: String
-    
-    init (id: Int, name: String, vicinity: String, rating: Int, photoRefrence: String) {
-        self.ID = id
-        self.name = name
-        self.vicinity = vicinity
-        self.rating = rating
-        self.photoRefrence = photoRefrence
-    }
-    
     
 }

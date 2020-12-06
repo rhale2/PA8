@@ -32,14 +32,33 @@ import MBProgressHUD
 class PlaceTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, GMSMapViewDelegate, UISearchBarDelegate {
     var places = [Place]()
     var placesClient: GMSPlacesClient!
+    var search: Bool = false
+ 
     
+    @IBOutlet var searchBarButton: UIBarButtonItem!
+    
+    @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var tableView: UITableView!
-    @IBOutlet var updateLocation:  UIBarButtonItem!
+    @IBOutlet var updateLocationButton:  UIBarButtonItem!
     
+    @IBAction func searchButtonPressed(_ sender: UIBarButtonItem) {
+        if (search == false) {
+            showSearchBar()
+            search = true
+        }
+        else if (search == true) {
+            hideSearchBar()
+            search = false
+        }
+       
+    }
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchBar.delegate = self
+        searchBar.searchBarStyle = UISearchBar.Style.minimal
+        searchBarButton = navigationItem.rightBarButtonItem
         placesClient = GMSPlacesClient.shared()
         
               
@@ -121,6 +140,37 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
+    func showSearchBar() {
+        searchBar.alpha = 0
+        navigationItem.titleView = searchBar
+        UIView.animate(withDuration: 0.5, animations: {
+          self.searchBar.alpha = 1
+          }, completion: { finished in
+            self.searchBar.becomeFirstResponder()
+            MBProgressHUD.showAdded(to: self.view, animated: true)
+        })
+    }
+    
+    func hideSearchBar() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.searchBar.alpha = 0
+          }, completion: { finished in
+            MBProgressHUD.hide(for: self.view, animated: true)
+            self.navigationItem.titleView = nil
+            self.navigationItem.titleView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+            self.navigationItem.title = "Near Me"
+        })
+    }
+
+
+      //MARK: UISearchBarDelegate
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        hideSearchBar()
+      }
+    
+    
+  
+    
     
     
     // id: Int, name: String, vicinity: String, rating: Int, photoRefrence: String
@@ -142,24 +192,5 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
-        if searchText != "" {
-            MBProgressHUD.showAdded(to: self.view, animated: true)
-            performSearch(searchBar: searchBar)
-        }
-        else {
-            searchBar.resignFirstResponder()
-        }
-    }
-    
-    func performSearch(searchBar: UISearchBar) {
-        if let text = searchBar.text {
-            let predicate = NSPredicate(format: "name CONTAINS[cd] %@", text)
-            MBProgressHUD.hide(for: self.view, animated: true)
-        }
-    }
     
 }
-
-
