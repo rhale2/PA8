@@ -42,15 +42,7 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
     @IBOutlet var updateLocationButton:  UIBarButtonItem!
     
     @IBAction func searchButtonPressed(_ sender: UIBarButtonItem) {
-        if (search == false) {
-            showSearchBar()
-            search = true
-        }
-        else if (search == true) {
-            hideSearchBar()
-            search = false
-        }
-       
+        showSearchBar()
     }
     
 
@@ -60,6 +52,7 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
         searchBar.searchBarStyle = UISearchBar.Style.minimal
         searchBarButton = navigationItem.rightBarButtonItem
         placesClient = GMSPlacesClient.shared()
+        
         
               
         // Do any additional setup after loading the view.
@@ -150,31 +143,14 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
             MBProgressHUD.showAdded(to: self.view, animated: true)
         })
     }
-    
-    func hideSearchBar() {
-        UIView.animate(withDuration: 0.3, animations: {
-            self.searchBar.alpha = 0
-          }, completion: { finished in
-            MBProgressHUD.hide(for: self.view, animated: true)
-            self.navigationItem.titleView = nil
-            self.navigationItem.titleView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-            self.navigationItem.title = "Near Me"
-        })
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        GooglePlacesAPI.fetchPlaces(input: searchText)
     }
-
-
-      //MARK: UISearchBarDelegate
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        hideSearchBar()
-      }
-    
-    
-  
-    
     
     
     // id: Int, name: String, vicinity: String, rating: Int, photoRefrence: String
-    func getPlaces () {
+    /*func getPlaces () {
         let placeFields: GMSPlaceField = [.placeID, .name, .formattedAddress, .rating, .photos]
         placesClient.findPlaceLikelihoodsFromCurrentLocation(withPlaceFields: placeFields) { (placeLikelihoods, error) in
             
@@ -190,7 +166,7 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
             }
             let rating = place.rating
         }
-    }
+    }*/
     
     
 }
