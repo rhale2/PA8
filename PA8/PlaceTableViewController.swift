@@ -28,8 +28,9 @@ import UIKit
 import GoogleMaps
 import GooglePlaces
 import MBProgressHUD
+import CoreLocation
 
-class PlaceTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, GMSMapViewDelegate, UISearchBarDelegate {
+class PlaceTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, GMSMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate {
     var places = [Place]()
     var placesClient: GMSPlacesClient!
     var search: Bool = false
@@ -39,13 +40,17 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
     
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var tableView: UITableView!
-    @IBOutlet var updateLocationButton:  UIBarButtonItem!
+    
+    @IBAction func updateLocationButton(_ sender: UIBarButtonItem) {
+        
+    }
     
     @IBAction func searchButtonPressed(_ sender: UIBarButtonItem) {
         showSearchBar()
     }
     
-
+    let locationManager = CLLocationManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
@@ -53,9 +58,71 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
         searchBarButton = navigationItem.rightBarButtonItem
         placesClient = GMSPlacesClient.shared()
         
-        
+        if CLLocationManager.locationServicesEnabled() {
+                    print("enabled")
+                    setupLocationServices()
+                }
+                else {
+                    print("disabled")
+                    // the user has turned off location services, airplane mode, HW failure, etc.
+                }
               
         // Do any additional setup after loading the view.
+    }
+    
+    func setupLocationServices() {
+            // need a CLLocationManager object
+            // and we need a delegate object
+            locationManager.delegate = self
+            
+            // we need to get the user's permission (AKA authorization) to access their location
+            // two types of authorization for location
+            // 1. When in use: the app gets location updates when its running
+            // 2. Always: the app always gets location updates. the OS will start the app to deliver an updates
+            // we will do 1.
+            // we need to add a key-value pair to Info.plist to declare the location services dependency and get permission
+            // key: Privacy - Location When in Use Usage Description
+            // value: a description of why your app needs this access
+            locationManager.requestWhenInUseAuthorization()
+            
+            // by default the location desired accuracy is "best"
+            // you should choose the most course-grained accuracy that your app can tolerate
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            
+            // two types of location updates
+            // 1. requestLocation(): one time update of the location
+            // 2. startUpdatingLocation(): continuous updates of the user's location
+            // don't forget to call stopUpdatingLocation() when you're done with location
+            //locationManager.requestLocation()
+            // need delegate callback methods!!
+            locationManager.startUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+            print(locations)
+            // update the labels!
+            // we are guaranteed there is at least one location
+            // the newest updates are at the end of the array
+            let location = locations[locations.count - 1]
+            // MAKE FUNC TO GET LAT?LANG
+            // we need a geocoder to get name
+            let geocoder = CLGeocoder()
+            geocoder.reverseGeocodeLocation(location) { (placeMarksOptional, errorOptional) in
+                if let placeMarks = placeMarksOptional, placeMarks.count > 0 {
+                    let placeMark = placeMarks[0]
+                    if let name = placeMark.name {
+                        //self.nameLabel.text = "Name: \(name)"
+                    }
+                }
+            }
+            
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Error requesting location \(error)")
+        // a few notable error codes
+        // 0: there is no location (e.g. Simulator location is None)
+        // 1: access denied
     }
     
     /**

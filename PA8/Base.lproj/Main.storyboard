@@ -79,7 +79,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="NearMe" id="Fxc-Gl-VJB">
-                        <barButtonItem key="leftBarButtonItem" title="Item" image="arrow.clockwise" catalog="system" id="80x-9Z-pFo"/>
+                        <barButtonItem key="leftBarButtonItem" title="Item" image="arrow.clockwise" catalog="system" id="80x-9Z-pFo">
+                            <connections>
+                                <action selector="updateLocationButton:" destination="BYZ-38-t0r" id="myr-XT-5P6"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="magnifyingglass" catalog="system" id="oJv-Qb-nPb">
                             <connections>
                                 <action selector="searchButtonPressed:" destination="BYZ-38-t0r" id="Dxy-KY-VWW"/>
@@ -89,7 +93,6 @@
                     <connections>
                         <outlet property="searchBar" destination="QTZ-24-sdQ" id="6xo-Xs-QvC"/>
                         <outlet property="tableView" destination="9kR-Jq-9sc" id="IIW-fK-qCq"/>
-                        <outlet property="updateLocationButton" destination="80x-9Z-pFo" id="2oz-Hv-bKv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

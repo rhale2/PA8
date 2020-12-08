@@ -10,17 +10,19 @@ import Foundation
 
 struct GooglePlacesAPI {
     private static let apiKey = "AIzaSyCqr-r3261KQcBV7G_BT-HZyy7SBKdAoxs"
+    static var latitude: Double = 0.0
+    static var longitude: Double = 0.0
     
     // the first thing we wanna do is construct or flickr.interestingness.getList url request for data
     static func GooglePlacesURL(input: String) -> URL {
-        let baseURL = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=\(apiKey)&input=\(input)&inputtype=textquery"
+        let baseURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
         // first lets define our query parameters
         let params = [
-            "method": "flickr.interestingness.getList",
-            "api_key": GooglePlacesAPI.apiKey,
-            "format": "json",
-            "nojsoncallback": "1", // asks for raw JSON
-            "extras": "date_taken,url_h" // url_h is for a 1600px image url for the photo
+            "key": GooglePlacesAPI.apiKey,
+            "latitude": "\(latitude)",
+            "longitude": "\(longitude)",
+            "radius": "1000",
+            "keyword": "\(input)"
         ]
         // now we need to get the params into a url with the base ulr
         var queryItems = [URLQueryItem]()
