@@ -31,25 +31,29 @@ import MBProgressHUD
 import CoreLocation
 
 class PlaceTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, GMSMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate {
-    var places = [Place]()
+    var places: [Place] = [Place]()
     var placesClient: GMSPlacesClient!
     var search: Bool = false
- 
+    let locationManager = CLLocationManager()
+    var currPlacesIndex: Int? = nil
     
     @IBOutlet var searchBarButton: UIBarButtonItem!
-    
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var tableView: UITableView!
     
     @IBAction func updateLocationButton(_ sender: UIBarButtonItem) {
-        
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        GooglePlacesAPI.fetchPlaces { (placeOptional) in
+            if let places = placeOptional {
+                self.places = places
+            }
+            MBProgressHUD.hide(for: self.view, animated: true)
+        }
     }
     
     @IBAction func searchButtonPressed(_ sender: UIBarButtonItem) {
         showSearchBar()
     }
-    
-    let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,126 +63,15 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
         placesClient = GMSPlacesClient.shared()
         
         if CLLocationManager.locationServicesEnabled() {
-                    print("enabled")
-                    setupLocationServices()
-                }
-                else {
-                    print("disabled")
-                    // the user has turned off location services, airplane mode, HW failure, etc.
-                }
+            print("enabled")
+            setupLocationServices()
+        }
+        else {
+            print("disabled")
+            // the user has turned off location services, airplane mode, HW failure, etc.
+        }
               
         // Do any additional setup after loading the view.
-    }
-    
-    func setupLocationServices() {
-            // need a CLLocationManager object
-            // and we need a delegate object
-            locationManager.delegate = self
-            
-            // we need to get the user's permission (AKA authorization) to access their location
-            // two types of authorization for location
-            // 1. When in use: the app gets location updates when its running
-            // 2. Always: the app always gets location updates. the OS will start the app to deliver an updates
-            // we will do 1.
-            // we need to add a key-value pair to Info.plist to declare the location services dependency and get permission
-            // key: Privacy - Location When in Use Usage Description
-            // value: a description of why your app needs this access
-            locationManager.requestWhenInUseAuthorization()
-            
-            // by default the location desired accuracy is "best"
-            // you should choose the most course-grained accuracy that your app can tolerate
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            
-            // two types of location updates
-            // 1. requestLocation(): one time update of the location
-            // 2. startUpdatingLocation(): continuous updates of the user's location
-            // don't forget to call stopUpdatingLocation() when you're done with location
-            //locationManager.requestLocation()
-            // need delegate callback methods!!
-            locationManager.startUpdatingLocation()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-            print(locations)
-            // update the labels!
-            // we are guaranteed there is at least one location
-            // the newest updates are at the end of the array
-            let location = locations[locations.count - 1]
-            // MAKE FUNC TO GET LAT?LANG
-            // we need a geocoder to get name
-            let geocoder = CLGeocoder()
-            geocoder.reverseGeocodeLocation(location) { (placeMarksOptional, errorOptional) in
-                if let placeMarks = placeMarksOptional, placeMarks.count > 0 {
-                    let placeMark = placeMarks[0]
-                    if let name = placeMark.name {
-                        //self.nameLabel.text = "Name: \(name)"
-                    }
-                }
-            }
-            
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Error requesting location \(error)")
-        // a few notable error codes
-        // 0: there is no location (e.g. Simulator location is None)
-        // 1: access denied
-    }
-    
-    /**
-     Sets how many rows there should be for the Table View.
-     
-     - Parameter tableView: The Table View.
-     - Parameter section: The number of sections in the Table View.
-     */
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (section == 0) {
-            return places.count
-        }
-        return 0
-    }
-    
-    /**
-    Places a Trip in a cell.
-    
-    - Parameter tableView: The Table View.
-    - Parameter indexPath: The cell position.
-    */
-    func tableView (_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let row = indexPath.row
-        let place = places[row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "", for: indexPath)
-            as! PlaceTableViewCell
-        cell.update(with: place)
-        return cell
-    }
-    
-    /**
-     Handles the moving of cells.
-     
-     - Parameter tableView: The Table View to edit.
-     - Parameter sourceIndexPath: The original loctation of the cell.
-     - Parameter destinationIndexPth: The new location of the cell.
-     */
-    func tableView (_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let trip = places.remove(at: sourceIndexPath.row)
-        places.insert(trip, at: destinationIndexPath.row)
-        tableView.reloadData()
-    }
-    
-    /**
-     Handels the deletion of a cell.
-     
-     - Parameter tableView: The Table View.
-     - Parameter editingStyle: The cell editing style.
-     - Parameter indexPath: The cell position.
-     */
-    func tableView (_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            places.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            tableView.reloadData()
-        }
     }
     
     /**
@@ -200,40 +93,105 @@ class PlaceTableViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
-    func showSearchBar() {
+    /**
+     Sets how many rows there should be for the Table View.
+     
+     - Parameter tableView: The Table View.
+     - Parameter section: The number of sections in the Table View.
+     */
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if (section == 0) {
+            return places.count
+        }
+        return 0
+    }
+    
+    /**
+    Places a place in a cell.
+         
+    - Parameter tableView: The Table View.
+    - Parameter indexPath: The cell position.
+    */
+    func tableView (_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let row = indexPath.row
+        let place = places[row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath)
+        if let text = cell.textLabel, let label = cell.detailTextLabel {
+            text.text = "\(place.name) (\(place.rating)⭐️)"
+            label.text = "\(place.vicinity)"
+        }
+        
+        return cell
+    }
+    
+    /**
+     Handles the moving of cells.
+     
+     - Parameter tableView: The Table View to edit.
+     - Parameter sourceIndexPath: The original loctation of the cell.
+     - Parameter destinationIndexPth: The new location of the cell.
+     */
+    func tableView (_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let place = places.remove(at: sourceIndexPath.row)
+        places.insert(place, at: destinationIndexPath.row)
+        tableView.reloadData()
+    }
+    
+    /**
+     Handels the deletion of a cell.
+     
+     - Parameter tableView: The Table View.
+     - Parameter editingStyle: The cell editing style.
+     - Parameter indexPath: The cell position.
+     */
+    func tableView (_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            places.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            tableView.reloadData()
+        }
+    }
+    func locationManager (_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let location = locations[locations.count - 1]
+        let coordinate = location.coordinate
+        let latitude = String(coordinate.latitude)
+        let longitude = String(coordinate.longitude)
+            
+        GooglePlacesAPI.latitude = latitude
+        GooglePlacesAPI.longitude = longitude
+    }
+        
+    func locationManager (_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Error requesting location \(error)")
+    }
+        
+    func setupLocationServices () {
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        locationManager.startUpdatingLocation()
+    }
+        
+    func searchBar (_ searchBar: UISearchBar, textDidChange searchText: String) {
+        GooglePlacesAPI.input = searchText
+        GooglePlacesAPI.googleNearBySearchesURL(input: GooglePlacesAPI.input, latitude: GooglePlacesAPI.latitude, longitude: GooglePlacesAPI.longitude)
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        GooglePlacesAPI.fetchPlaces { (placeOptional) in
+            if let places = placeOptional {
+                self.places = places
+            }
+            MBProgressHUD.hide(for: self.view, animated: true)
+        }
+        tableView.reloadData()
+    }
+        
+    func showSearchBar () {
         searchBar.alpha = 0
         navigationItem.titleView = searchBar
         UIView.animate(withDuration: 0.5, animations: {
-          self.searchBar.alpha = 1
-          }, completion: { finished in
+            self.searchBar.alpha = 1
+        }, completion: { finished in
             self.searchBar.becomeFirstResponder()
-            MBProgressHUD.showAdded(to: self.view, animated: true)
         })
     }
-
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        GooglePlacesAPI.fetchPlaces(input: searchText)
-    }
-    
-    
-    // id: Int, name: String, vicinity: String, rating: Int, photoRefrence: String
-    /*func getPlaces () {
-        let placeFields: GMSPlaceField = [.placeID, .name, .formattedAddress, .rating, .photos]
-        placesClient.findPlaceLikelihoodsFromCurrentLocation(withPlaceFields: placeFields) { (placeLikelihoods, error) in
-            
-            
-            guard error == nil else {
-                print("Current place error: \(error?.localizedDescription ?? "")")
-                return
-            }
-            
-            guard let place = placeLikelihoods?.first?.place, let id = place.placeID, let name = place.name, let address = place.formattedAddress, let photos = place.photos else {
-                print("error")
-                return
-            }
-            let rating = place.rating
-        }
-    }*/
-    
-    
 }

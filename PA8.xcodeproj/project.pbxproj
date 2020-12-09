@@ -17,7 +17,6 @@
 		BFFABC392571617E006E36BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFFABC372571617E006E36BB /* LaunchScreen.storyboard */; };
 		BFFABC41257161EC006E36BB /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFABC40257161EC006E36BB /* Place.swift */; };
 		BFFABC4325716E42006E36BB /* PlaceDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFABC4225716E42006E36BB /* PlaceDetailViewController.swift */; };
-		BFFABC4525716F23006E36BB /* PlaceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFABC4425716F23006E36BB /* PlaceTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,7 +32,6 @@
 		BFFABC3A2571617E006E36BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BFFABC40257161EC006E36BB /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
 		BFFABC4225716E42006E36BB /* PlaceDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDetailViewController.swift; sourceTree = "<group>"; };
-		BFFABC4425716F23006E36BB /* PlaceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceTableViewCell.swift; sourceTree = "<group>"; };
 		CA269C45F109CE1ECD8D706C /* Pods-PA8.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PA8.release.xcconfig"; path = "Target Support Files/Pods-PA8/Pods-PA8.release.xcconfig"; sourceTree = "<group>"; };
 		EE029076D06ADED694532BDC /* Pods_PA8.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PA8.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -82,7 +80,6 @@
 				BFFABC372571617E006E36BB /* LaunchScreen.storyboard */,
 				BFFABC322571617B006E36BB /* Main.storyboard */,
 				BFFABC302571617B006E36BB /* PlaceTableViewController.swift */,
-				BFFABC4425716F23006E36BB /* PlaceTableViewCell.swift */,
 				BFFABC4225716E42006E36BB /* PlaceDetailViewController.swift */,
 				BFFABC40257161EC006E36BB /* Place.swift */,
 				BFFABC2C2571617B006E36BB /* AppDelegate.swift */,
@@ -242,7 +239,6 @@
 				BFFABC4325716E42006E36BB /* PlaceDetailViewController.swift in Sources */,
 				BFFABC2F2571617B006E36BB /* SceneDelegate.swift in Sources */,
 				BFFABC41257161EC006E36BB /* Place.swift in Sources */,
-				BFFABC4525716F23006E36BB /* PlaceTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

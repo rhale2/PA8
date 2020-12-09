@@ -62,10 +62,10 @@
                                     </tableView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="9kR-Jq-9sc" firstAttribute="top" secondItem="QTZ-24-sdQ" secondAttribute="bottom" id="TfB-o0-7wJ"/>
-                                    <constraint firstItem="9kR-Jq-9sc" firstAttribute="leading" secondItem="QTZ-24-sdQ" secondAttribute="leading" id="UUg-8Q-shf"/>
-                                    <constraint firstItem="9kR-Jq-9sc" firstAttribute="top" secondItem="IMn-bB-b0a" secondAttribute="top" constant="103" id="ggq-F8-Wk7"/>
-                                    <constraint firstItem="9kR-Jq-9sc" firstAttribute="leading" secondItem="IMn-bB-b0a" secondAttribute="leading" id="tQB-7G-yIb"/>
+                                    <constraint firstItem="9kR-Jq-9sc" firstAttribute="leading" secondItem="IMn-bB-b0a" secondAttribute="leading" id="6i9-q1-uzv"/>
+                                    <constraint firstItem="9kR-Jq-9sc" firstAttribute="top" secondItem="QTZ-24-sdQ" secondAttribute="bottom" id="BgQ-26-BJf"/>
+                                    <constraint firstAttribute="trailing" secondItem="9kR-Jq-9sc" secondAttribute="trailing" id="e2I-Ak-hgr"/>
+                                    <constraint firstAttribute="bottom" secondItem="9kR-Jq-9sc" secondAttribute="bottom" id="f80-Ew-SpE"/>
                                 </constraints>
                             </stackView>
                         </subviews>
@@ -86,12 +86,13 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="magnifyingglass" catalog="system" id="oJv-Qb-nPb">
                             <connections>
-                                <action selector="searchButtonPressed:" destination="BYZ-38-t0r" id="Dxy-KY-VWW"/>
+                                <action selector="searchButtonPressed:" destination="BYZ-38-t0r" id="XEt-GA-tTM"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="searchBar" destination="QTZ-24-sdQ" id="6xo-Xs-QvC"/>
+                        <outlet property="searchBarButton" destination="oJv-Qb-nPb" id="sAu-8W-U79"/>
                         <outlet property="tableView" destination="9kR-Jq-9sc" id="IIW-fK-qCq"/>
                     </connections>
                 </viewController>
@@ -120,25 +121,25 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open/Closed" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vuk-Gk-6xv">
-                                                <rect key="frame" x="0.0" y="39.5" width="414" height="20"/>
+                                                <rect key="frame" x="0.0" y="39.5" width="414" height="19.5"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phone Number" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o7b-gh-3RA">
-                                                <rect key="frame" x="0.0" y="79.5" width="414" height="19.5"/>
+                                                <rect key="frame" x="0.0" y="79" width="414" height="19.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tIb-YX-xaE">
-                                                <rect key="frame" x="0.0" y="119" width="414" height="19.5"/>
+                                                <rect key="frame" x="0.0" y="118.5" width="414" height="19.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Review" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="IIC-a5-lW2">
-                                                <rect key="frame" x="0.0" y="158.5" width="414" height="235.5"/>
+                                                <rect key="frame" x="0.0" y="158" width="414" height="236"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <color key="textColor" systemColor="labelColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -151,10 +152,10 @@
                                     </imageView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="gal-Kt-kJu" firstAttribute="leading" secondItem="nFt-53-lfC" secondAttribute="leading" id="6zY-n8-b0a"/>
-                                    <constraint firstItem="gal-Kt-kJu" firstAttribute="top" secondItem="nFt-53-lfC" secondAttribute="top" id="B2q-6Z-e0T"/>
-                                    <constraint firstItem="T9g-f3-uCP" firstAttribute="top" secondItem="nFt-53-lfC" secondAttribute="top" constant="398.5" id="HwT-Jm-hiJ"/>
-                                    <constraint firstAttribute="trailing" secondItem="gal-Kt-kJu" secondAttribute="trailing" id="txH-Bz-k9V"/>
+                                    <constraint firstItem="T9g-f3-uCP" firstAttribute="top" secondItem="gal-Kt-kJu" secondAttribute="bottom" constant="20" id="9hO-gE-gL6"/>
+                                    <constraint firstAttribute="trailing" secondItem="gal-Kt-kJu" secondAttribute="trailing" id="FsR-eJ-ejY"/>
+                                    <constraint firstItem="gal-Kt-kJu" firstAttribute="leading" secondItem="nFt-53-lfC" secondAttribute="leading" id="MUO-mf-A16"/>
+                                    <constraint firstItem="gal-Kt-kJu" firstAttribute="top" secondItem="nFt-53-lfC" secondAttribute="top" id="Mws-f8-qDW"/>
                                 </constraints>
                             </stackView>
                         </subviews>
